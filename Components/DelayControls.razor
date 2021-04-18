@@ -1,0 +1,41 @@
+﻿@inject DelayParameterContainer delayParamContainer
+
+        <h3>Simulate Work</h3>
+
+        <TabControl>
+            @foreach (var delayparam in delayParamContainer.DelayParameters)
+            {
+                <TabPage Text="@delayparam.Key">
+                    <br />
+                    <label>SetParametersAsync</label>
+                    <InputCheckbox @bind-Value="delayparam.Value.DelaySetParametersAsync" />
+                    <br />
+                    <label>OnInitializedAsync</label>
+                    <InputCheckbox @bind-Value="delayparam.Value.DelayOnInitializedAsync" />
+                    <br />
+                    <label>OnParametersSetAsync</label>
+                    <InputCheckbox @bind-Value="delayparam.Value.DelayOnParametersSetAsync" />
+                    <br />
+                    <label>OnAfterRenderAsync</label>
+                    <InputCheckbox @bind-Value="delayparam.Value.DelayOnAfterRenderAsync" />
+                    <br />
+                    <InputNumber @bind-Value="delayparam.Value.DelayTime" /> in ms
+                    <br />
+                </TabPage>
+            }
+        </TabControl>
+
+    @code {
+
+        protected override void OnInitialized()
+        {
+            delayParamContainer.OnChange += OnDelayparamterAdded;
+            base.OnInitialized();
+        }
+
+        private void OnDelayparamterAdded()
+        {
+            StateHasChanged();
+        }
+
+    }

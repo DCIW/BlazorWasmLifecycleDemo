@@ -1,0 +1,29 @@
+﻿@inherits NotificationComponentBase
+
+<h4>@ComponentName</h4>
+
+<button type="button" @onclick="() => StateHasChanged()">StateHasChanged</button>
+<button type="button" @onclick="() => testparameter = testparameter == 0 ? 1 : 0 ">ChangeParameter</button>
+
+<ChildComponent @bind-TestParameter="testparameter" />
+
+@code {
+
+    protected override HierarchyLevel HierarchyLevel => HierarchyLevel.Parent;
+
+    protected override string ComponentName => "Parent";
+
+    protected override int PositionOnHierarchyLevel => 0;
+
+    private int param = 0;
+
+    private int testparameter
+    {
+        get => param;
+        set
+        {
+            param = value;
+            CreateParameterChangedNotification();
+        }
+    }
+}

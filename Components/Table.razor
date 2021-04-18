@@ -1,0 +1,28 @@
+﻿@typeparam TItem
+
+<table class="table">
+    <thead>
+        @TableHeader
+    </thead>
+    <tbody>
+        @if (Items is not null)
+        {
+            <Virtualize Items="Items" Context="item">
+                <tr @key="item.GetHashCode()">
+                    @RowTemplate(item)
+                </tr>
+            </Virtualize>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public RenderFragment TableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> RowTemplate { get; set; }
+
+    [Parameter]
+    public ICollection<TItem> Items { get; set; }
+}

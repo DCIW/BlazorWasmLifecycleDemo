@@ -1,0 +1,34 @@
+﻿@page "/"
+
+@inject NotificationsContainer notificationsContainer
+
+<EditForm Model="1">
+
+    <div>
+        <div class="row">
+            <div class="col-6">
+                <DelayControls />
+            </div>
+            <div class="col-6">
+
+                <ParentComponent @ref="component" />
+            </div>
+        </div>
+
+        <button type="button" @onclick="() => component = new ParentComponent()">Recreate components</button>
+
+        <div class="row">
+            <div class="col-12">
+                <DisplayMessages />
+            </div>
+        </div>
+
+    </div>
+</EditForm>
+
+@code {
+
+    ParentComponent component;
+
+}
+

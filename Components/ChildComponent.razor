@@ -1,0 +1,43 @@
+﻿@inherits NotificationComponentBase
+
+<h4>@ComponentName</h4>
+
+<button type="button" @onclick="() => StateHasChanged()">StateHasChanged</button>
+<button type="button" @onclick="() => CurrentTestParameter = CurrentTestParameter == 0 ? 1 : 0 ">ChangeParameter</button>
+
+<GrandchildComponent @bind-TestParameter="CurrentTestParameter" />
+<GrandchildComponent2 />
+
+@code {
+
+    private int _testParameter;
+
+    [Parameter]
+    public int TestParameter {
+        get => _testParameter;
+        set
+        {
+            _testParameter = value;
+            CreateParameterChangedNotification();
+        }
+    }
+
+    [Parameter]
+    public EventCallback<int> TestParameterChanged { get; set; }
+
+    private int CurrentTestParameter
+    {
+        get => TestParameter;
+        set
+        {
+            TestParameter = value;
+            CreateParameterChangedNotification();
+            TestParameterChanged.InvokeAsync(value);
+        }
+    }
+
+    protected override HierarchyLevel HierarchyLevel => HierarchyLevel.Child;
+    protected override string ComponentName => "Child";
+    protected override int PositionOnHierarchyLevel => 0;
+
+}

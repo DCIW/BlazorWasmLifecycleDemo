@@ -1,0 +1,125 @@
+﻿@inject NotificationsContainer notificationsContainer
+
+<button type="button" @onclick="() => notificationsContainer.Clear()">Clear</button>
+
+@if (notificationsContainer.Notifications?.Any() ?? false)
+{
+    <Table Items="@notificationsContainer.Notifications" Context="notification">
+        <TableHeader>
+            <tr>
+                <th rowspan="2">Step</th>
+                @foreach (HierarchyLevel level in (HierarchyLevel[])Enum.GetValues(typeof(HierarchyLevel)))
+                {
+                    if (notificationsContainer.GetAmountOfComponentsIn(level) > 1)
+                    {
+                        <th colspan="@notificationsContainer.GetAmountOfComponentsIn(level)">@level</th>
+                    }
+                    else
+                    {
+                        <th rowspan="2">@level</th>
+                    }
+                }
+            </tr>
+            <tr>
+                @foreach (HierarchyLevel level in (HierarchyLevel[])Enum.GetValues(typeof(HierarchyLevel)))
+                {
+                    if (notificationsContainer.GetAmountOfComponentsIn(level) > 1)
+                    {
+                        @foreach (var componentName in notificationsContainer.GetComponentNamesFor(level))
+                        {
+                            <th>@componentName</th>
+                        }
+                    }
+                }
+            </tr>
+        </TableHeader>
+        <RowTemplate>
+            <td>@notification.Key</td>
+            @if (notification.Value.HierarchyLevel == HierarchyLevel.Parent)
+                {
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Parent); i++)
+                    {
+                        if (i == notification.Value.PositionOnHierarchyLevel)
+                        {
+                        <td>@((MarkupString)notification.Value.Message)</td>
+                        }
+                        else
+                        {
+                        <td></td>
+                        }
+                    }
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Child); i++)
+                    {
+                    <td></td>
+                    }
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Grandchild); i++)
+                    {
+                    <td></td>
+                    }
+                }
+                else if (notification.Value.HierarchyLevel == HierarchyLevel.Child)
+                {
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Parent); i++)
+                    {
+                    <td></td>
+                    }
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Child); i++)
+                    {
+                        if (i == notification.Value.PositionOnHierarchyLevel)
+                        {
+                        <td>@((MarkupString)notification.Value.Message)</td>
+                        }
+                        else
+                        {
+                        <td></td>
+                        }
+                    }
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Grandchild); i++)
+                    {
+                    <td></td>
+                    }
+                }
+                else if (notification.Value.HierarchyLevel == HierarchyLevel.Grandchild)
+                {
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Parent); i++)
+                    {
+                    <td></td>
+                    }
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Child); i++)
+                    {
+                    <td></td>
+                    }
+                @for (int i = 0; i < notificationsContainer.GetAmountOfComponentsIn(HierarchyLevel.Grandchild); i++)
+                    {
+                        if (i == notification.Value.PositionOnHierarchyLevel)
+                        {
+                        <td>@((MarkupString)notification.Value.Message)</td>
+                        }
+                        else
+                        {
+                        <td></td>
+                        }
+                    }
+                }
+        </RowTemplate>
+    </Table>
+
+}
+
+@code {
+
+    private List<string> AllComponentNames = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        notificationsContainer.OnChange += OnMessagesChanged;
+
+        base.OnInitialized();
+    }
+
+    private void OnMessagesChanged()
+    {
+        StateHasChanged();
+    }
+
+}

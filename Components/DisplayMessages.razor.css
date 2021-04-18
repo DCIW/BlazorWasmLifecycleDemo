@@ -1,0 +1,27 @@
+﻿::deep th, td {
+    font-weight: normal;
+    padding: 5px;
+    vertical-align: top;
+}
+
+::deep th {
+    background: #00B0F0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    color: #fff;
+}
+
+::deep tr + tr th, tbody th {
+    background: #DAEEF3;
+}
+
+::deep tr + tr, tbody {
+    text-align: left
+}
+
+::deep table, th, td {
+    border: solid 1px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
